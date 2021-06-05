@@ -1,5 +1,5 @@
-import '../styles/Cart.css'
 import {useState} from 'react'
+import '../styles/Cart.css'
 /* Le state local est présent à l’intérieur d’un composant et garde sa valeur, 
 même si l'application se re-render. On peut alors dire qu'il est stateful. */
 
@@ -8,8 +8,28 @@ même si l'application se re-render. On peut alors dire qu'il est stateful. */
 
 
 function Cart({ cart, updateCart }) {
-	const monsteraPrice = 8
 	const [isOpen, setIsOpen] = useState(true)
+	const total = cart.reduce(
+		(acc, plantType) => acc + plantType.amount * plantType.price, 
+		0
+	)
+
+	function removeFromCart(name, price) {
+		const currentPlant = cart.find((plant) => plant.name === name)
+
+		const cartFiltrPlant = cart.filter(
+				(plant) => plant.name !== name
+			)
+
+		if (currentPlant && currentPlant.amount > 1) {
+
+			updateCart([
+				...cartFiltrPlant, { name, price, amount: currentPlant.amount - 1 }
+			])
+		} else {
+			updateCart([...cartFiltrPlant])
+		}
+	}
 
 	return isOpen ? (
 		<div className='lmj-cart'>
@@ -20,8 +40,19 @@ function Cart({ cart, updateCart }) {
 				Fermer
 			</button>
 			<h2>Panier</h2>
-			<h3>Total : {monsteraPrice * cart}€</h3>
-			<button onClick={() => updateCart(0)}>Vider le panier</button>
+			{cart.map(({ name, price, amount }, index) =>(
+				<div className='lmj-cart-item'>
+					<div key={`${name}-${index}`}>
+						<strong>{name}</strong> {price}€ x {amount}
+					</div>
+					<div>
+						<button onClick={() => removeFromCart(name, price)}>Retirer</button>
+					</div>
+				</div>
+			))}
+
+			<h3>Total : {total}€</h3>
+			<button onClick={() => updateCart([])}>Vider le panier</button>
 		</div>
 	) : (
 		<div className='lmj-cart-closed'>

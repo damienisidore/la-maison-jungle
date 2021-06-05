@@ -1,10 +1,11 @@
+import { useState } from 'react'
 import logo from '../logo.svg';
-import '../App.css';
 import Banner from './Banner'
 import Cart from './Cart'
 import Footer from './Footer'
 import  ShoppingList from './ShoppingList.js'
-import {useState} from 'react'
+import '../styles/Layout.css'
+
 
 
 function App(){
@@ -13,8 +14,10 @@ function App(){
   return (
   	<div>
   		<Banner />
-  		<Cart cart={cart} updateCart={updateCart} />
-  		<ShoppingList cart={cart} updateCart={updateCart} />
+      <div className='lmj-layout-inner'>
+    		<Cart cart={cart} updateCart={updateCart} />
+    		<ShoppingList cart={cart} updateCart={updateCart} />
+      </div>
       <Footer />
   	</div>
   	)
